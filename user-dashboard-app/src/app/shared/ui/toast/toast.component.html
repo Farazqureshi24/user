@@ -1,0 +1,6 @@
+<div class="toast-stack" aria-live="polite" aria-atomic="true">
+  <div *ngIf="toast$ | async as toast" class="toast" [ngClass]="toast.variant">
+    <span class="toast__indicator"></span>
+    <p>{{ toast.message }}</p>
+  </div>
+</div>

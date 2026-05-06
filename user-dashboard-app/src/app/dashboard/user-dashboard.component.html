@@ -1,0 +1,166 @@
+<section class="dashboard-shell">
+  <header class="dashboard-hero">
+    <div class="dashboard-hero__copy">
+      <p class="eyebrow">Operations Overview</p>
+      <h1>User Dashboard</h1>
+      <p>
+        Monitor role coverage, search the directory, and add new users without
+        inflating the initial bundle.
+      </p>
+    </div>
+
+    <button type="button" class="primary-button" (click)="openAddUserModal()">Add User</button>
+  </header>
+
+  <div class="dashboard-grid">
+    <section class="panel panel--wide">
+      <div class="panel__header">
+        <div>
+          <h2>Team Directory</h2>
+          <p>Search users, review access levels, and move through paginated results.</p>
+        </div>
+
+        <label class="search-field">
+          <span>Search</span>
+          <input
+            type="search"
+            [formControl]="searchControl"
+            placeholder="Search by name, email, or role"
+          >
+        </label>
+      </div>
+
+      @if (dashboardViewModel$ | async; as viewModel) {
+        <div class="stats-row">
+          @for (role of roleOptions; track role) {
+            <article class="stat-chip">
+              <span>{{ role }}</span>
+              <strong>{{ viewModel.roleSummary[role] }}</strong>
+            </article>
+          }
+        </div>
+
+        @if (isLoading()) {
+          <div class="skeleton-stack" aria-hidden="true">
+            <div class="skeleton skeleton--header"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+            <div class="skeleton"></div>
+          </div>
+        } @else if (!viewModel.hasUsers) {
+          <div class="empty-state">
+            <h3>No users yet</h3>
+            <p>Add the first user to populate the table and the role distribution chart.</p>
+            <button type="button" class="secondary-button" (click)="openAddUserModal()">
+              Create First User
+            </button>
+          </div>
+        } @else if (!viewModel.hasFilteredResults) {
+          <div class="empty-state">
+            <h3>No matches found</h3>
+            <p>Adjust the search term to see users that match the current filter.</p>
+          </div>
+        } @else {
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Added</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (user of viewModel.paginatedUsers; track trackByUserId($index, user)) {
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <strong>{{ user.name }}</strong>
+                      </div>
+                    </td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                      <span class="role-badge" [ngClass]="'role-badge--' + user.role.toLowerCase()">
+                        {{ user.role }}
+                      </span>
+                    </td>
+                    <td>{{ user.createdAt | date: 'mediumDate' }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <footer class="pagination">
+            <p>
+              Showing {{ viewModel.pageStart }}-{{ viewModel.pageEnd }} of {{ viewModel.totalItems }}
+            </p>
+
+            <div class="pagination__controls">
+              <button
+                type="button"
+                class="secondary-button"
+                [disabled]="viewModel.currentPage === 1"
+                (click)="previousPage()"
+              >
+                Previous
+              </button>
+              <span>Page {{ viewModel.currentPage }} of {{ viewModel.totalPages }}</span>
+              <button
+                type="button"
+                class="secondary-button"
+                [disabled]="viewModel.currentPage === viewModel.totalPages"
+                (click)="nextPage()"
+              >
+                Next
+              </button>
+            </div>
+          </footer>
+        }
+      }
+    </section>
+
+    <section class="panel chart-panel">
+      <div class="panel__header">
+        <div>
+          <h2>Role Mix</h2>
+          <p>Chart.js loads only when this view initializes and updates with each new user.</p>
+        </div>
+      </div>
+
+      @if (chartLoadError(); as chartError) {
+        <div class="empty-state empty-state--compact">
+          <h3>Chart unavailable</h3>
+          <p>{{ chartError }}</p>
+        </div>
+      } @else {
+        <div class="chart-stage" [class.chart-stage--loading]="!isChartReady()">
+          @if (!isChartReady()) {
+            <div class="chart-loader">
+              <span class="spinner"></span>
+              <p>Loading chart</p>
+            </div>
+          }
+
+          <canvas #chartCanvas [class.chart-stage__canvas--hidden]="!isChartReady()"></canvas>
+        </div>
+      }
+    </section>
+  </div>
+
+  @if (isModalOpen()) {
+    <div class="modal-overlay" (click)="closeAddUserModal()">
+      <div class="modal-surface" (click)="$event.stopPropagation()">
+        @if (isModalLoading()) {
+          <div class="modal-loader">
+            <span class="spinner"></span>
+            <p>Loading form</p>
+          </div>
+        }
+
+        <ng-template #modalHost></ng-template>
+      </div>
+    </div>
+  }
+</section>

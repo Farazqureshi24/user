@@ -1,0 +1,52 @@
+<section class="user-form">
+  <header class="user-form__header">
+    <div>
+      <p class="eyebrow">New Access Record</p>
+      <h2>Add User</h2>
+    </div>
+    <button
+      type="button"
+      class="icon-button"
+      aria-label="Close add user form"
+      (click)="closed.emit()"
+    >
+      <span aria-hidden="true">x</span>
+    </button>
+  </header>
+
+  <form [formGroup]="userForm" class="user-form__body" (ngSubmit)="onSubmit()">
+    <label class="field">
+      <span>Name</span>
+      <input type="text" formControlName="name" placeholder="Avery Stone">
+      @if (userForm.controls.name.touched && userForm.controls.name.invalid) {
+        <small>Name is required.</small>
+      }
+    </label>
+
+    <label class="field">
+      <span>Email</span>
+      <input type="email" formControlName="email" placeholder="avery@company.com">
+      @if (userForm.controls.email.touched && userForm.controls.email.invalid) {
+        <small>Enter a valid email address.</small>
+      }
+    </label>
+
+    <label class="field">
+      <span>Role</span>
+      <select formControlName="role">
+        <option value="" disabled>Select a role</option>
+        @for (role of roleOptions; track role) {
+          <option [value]="role">{{ role }}</option>
+        }
+      </select>
+      @if (userForm.controls.role.touched && userForm.controls.role.invalid) {
+        <small>Choose a role.</small>
+      }
+    </label>
+
+    <footer class="user-form__actions">
+      <button type="button" class="secondary-button" (click)="closed.emit()">Cancel</button>
+      <button type="submit" class="primary-button">Save User</button>
+    </footer>
+  </form>
+</section>

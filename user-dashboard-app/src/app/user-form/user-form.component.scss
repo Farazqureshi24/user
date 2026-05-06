@@ -1,0 +1,130 @@
+.user-form {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.user-form__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.user-form__header h2 {
+  margin: 0.35rem 0 0;
+  font-size: 1.7rem;
+  color: var(--color-primary-strong);
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.user-form__body {
+  display: grid;
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.field span {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  height: var(--control-height);
+  border-radius: var(--radius-control);
+  border: 1px solid rgba(28, 73, 128, 0.18);
+  background: #f8fbff;
+  padding: 0 1rem;
+  color: var(--color-ink);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: rgba(28, 73, 128, 0.42);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(28, 73, 128, 0.12);
+}
+
+.field small {
+  color: var(--color-danger);
+  line-height: 1.35;
+}
+
+.user-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.primary-button,
+.secondary-button,
+.icon-button {
+  border: 0;
+  border-radius: var(--radius-control);
+  height: var(--control-height);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.primary-button,
+.secondary-button {
+  padding: 0 1.2rem;
+  font-weight: 700;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-strong) 100%);
+  color: #fff;
+  box-shadow: 0 14px 32px rgba(28, 73, 128, 0.25);
+}
+
+.secondary-button {
+  background: rgba(28, 73, 128, 0.08);
+  color: var(--color-primary-strong);
+}
+
+.icon-button {
+  width: var(--control-height);
+  background: rgba(28, 73, 128, 0.08);
+  color: var(--color-primary-strong);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.primary-button:hover,
+.secondary-button:hover,
+.icon-button:hover {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .user-form__actions {
+    flex-direction: column-reverse;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+  }
+}
